@@ -8,9 +8,9 @@ auth_bp = Blueprint('credentials', __name__)
 def login():
     data = request.json
     student_code = data.get('student_code')
-    password = data.get('password')
+    password_hash = data.get('password_hash')
 
-    user = login_user(student_code, password)
+    user = login_user(student_code, password_hash)
 
     if user:
         return jsonify({
