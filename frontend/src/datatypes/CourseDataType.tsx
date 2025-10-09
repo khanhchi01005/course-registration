@@ -1,4 +1,6 @@
 export interface CourseData {
+    courseCode: string
     courseName: string
-    //... thêm nếu cần
+    maxSlot: number
+    currentSlot: number
 }

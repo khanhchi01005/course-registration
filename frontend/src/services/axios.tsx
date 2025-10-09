@@ -6,15 +6,17 @@ const axiosClient = axios.create({
     headers: {
         "Content-Type": "application/json",
     },
-    withCredentials: false, // true nếu backend dùng cookie/session
+    withCredentials: false, 
 });
 
 axiosClient.interceptors.response.use(
-    (response) => response.data, // chỉ trả về data
-    (error) => {
+  (response) => {
+    return { data: response.data, status: response.status } as any;
+  },
+  (error) => {
     console.error("API Error:", error.response?.data || error.message);
     return Promise.reject(error);
-    }
+  }
 );
 
 export default axiosClient;

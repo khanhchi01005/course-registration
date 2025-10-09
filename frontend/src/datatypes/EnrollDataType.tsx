@@ -1,4 +1,14 @@
-export interface EnrollData {
-    nameCourse: string
-    //... thêm nếu cần
+import type { CourseData } from "./CourseDataType";
+
+export interface RecordData {
+    courseData: CourseData
+    isSelect: boolean
+}
+
+export interface RecordAttribute {
+    name: string
+    width: string
+    pos: "other" | "right"
+    isCheckBox: boolean
+    keyCode: string
 }

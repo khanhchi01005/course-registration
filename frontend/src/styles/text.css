@@ -1,0 +1,8 @@
+@font-face {
+  font-family: 'Yrsa';
+  src: url('../assets/fonts/Yrsa-Regular.ttf') format('truetype');
+}
+
+.yrsa-font {
+    font-family: 'Yrsa', 'serif';
+}
