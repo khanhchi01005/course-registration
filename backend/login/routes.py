@@ -1,26 +1,28 @@
-import sqlite3
 import datetime
 import os
-
-DATABASE = os.path.join(os.path.dirname(os.getcwd()), 'course-registration.db')
-
-def get_db_connection():
-    conn = sqlite3.connect(DATABASE)
-    conn.row_factory = sqlite3.Row
-    return conn
+import mysql.connector
+from db_connector import get_db_connection
+from mysql.connector import Error
 
 def login_user(student_code, password_hash):
     conn = None
+    cur = None
     try:
         conn = get_db_connection()
-        user = conn.execute(
-            "SELECT student_code, full_name FROM students WHERE student_code = ? AND password_hash = ?",
+        cur = conn.cursor(dictionary=True)
+        cur.execute(
+            "SELECT student_code, full_name FROM students WHERE student_code = %s AND password_hash = %s",
             (student_code, password_hash)
-        ).fetchone()
-        return user
-    except Exception as e:
+        )
+        row = cur.fetchone()
+        return row
+
+    except Error as e:
         print(f"Error during login: {e}")
         return None
     finally:
+        if cur:
+            try: cur.close()
+            except Exception: pass
         if conn:
             conn.close()
