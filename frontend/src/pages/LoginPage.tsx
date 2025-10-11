@@ -1,4 +1,10 @@
-// chứa các Component(button, input,...) của trang đăng nhập
+// src/pages/LoginPage.tsx
+import { LoginLayout } from "../components/login/LoginLayout";
+
 export function LoginPage() {
-    return <></>
+    return (
+        <div>
+            <LoginLayout />
+        </div>
+    );
 }
