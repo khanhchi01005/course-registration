@@ -27,6 +27,8 @@
 - 6: npm install -D @types/axios
 - 7: npm install humps
 - 8: npm install --save-dev @types/humps
+- 9: npm install -g typescript
+- 10: npm install --save-dev typescript 
 
 
 // Chạy hệ thống dưới góc nhìn dev:
