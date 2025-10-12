@@ -25,6 +25,8 @@
 - 4: npm install dotenv
 - 5: npm install axios
 - 6: npm install -D @types/axios
+- 7: npm install humps
+- 8: npm install --save-dev @types/humps
 
 
 // Chạy hệ thống dưới góc nhìn dev:

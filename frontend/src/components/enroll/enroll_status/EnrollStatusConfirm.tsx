@@ -1,7 +1,8 @@
 import { useContext } from "react";
-import { CoursesContext, fetchCourses } from "../EnrollLayout";
 import type { CourseData } from "../../../datatypes/CourseDataType";
 import { useNavigate } from "react-router-dom";
+import { CoursesContext, fetchCourses, saveSubmitData } from "../EnrollExtra";
+import type { SubmitData } from "../../../datatypes/EnrollDataType";
 
 export function EnrollStatusConfirm() {
     const navigate = useNavigate()
@@ -25,6 +26,7 @@ export function EnrollStatusConfirm() {
 
         // Kiểm tra slot
         const exceededCourses: CourseData[] = []
+        const sucessedCoursesId: string[] = []
 
         for (const course of selectedRecords) {
             const currentCourse = currentRecords[course.courseCode]?.courseData
@@ -33,12 +35,23 @@ export function EnrollStatusConfirm() {
 
             if (currentCourse.currentSlot + 1 > currentCourse.maxSlot) {
                 exceededCourses.push(currentCourse)
+            } 
+            else {
+                sucessedCoursesId.push(currentCourse.courseCode)
             }
         }
+        
+        // Lưu các khóa học thành công vào database
+        const submitDatas: SubmitData = {
+            studentCode: "23020592", /////////////////////////////////////////////////////////
+            courseId: sucessedCoursesId
+        }
+
+        await saveSubmitData(submitDatas)
 
         // Nếu có khóa học đầy slot
         if (exceededCourses.length > 0) {
-            const validCount = selectedRecords.length - exceededCourses.length
+            const validCount = sucessedCoursesId.length
             const totalCount = selectedRecords.length
 
             window.alert(`Bạn đã ghi nhận được ${validCount}/${totalCount} khóa học`)

@@ -12,3 +12,8 @@ export interface RecordAttribute {
     isCheckBox: boolean
     keyCode: string
 }
+
+export interface SubmitData {
+    studentCode: string
+    courseId: string[]
+}

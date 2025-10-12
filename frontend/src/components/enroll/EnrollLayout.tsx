@@ -1,18 +1,8 @@
-import { createContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { EnrollContentLayout } from "./enroll_content/EnrollContentLayout";
 import { EnrollNavbarLayout } from "./enroll_navbar/EnrollNavbarLayout";
-import type { CourseData } from "../../datatypes/CourseDataType";
 import type { RecordData } from "../../datatypes/EnrollDataType";
-import { courseApi } from "../../services/courseApi";
-import { mockCourses } from "../../services/mockCourseData";
-
-export const CoursesContext = createContext<{
-    records: Record<string, RecordData>,
-    setRecords: React.Dispatch<React.SetStateAction<Record<string, RecordData>>>
-}>({
-    records: {},
-    setRecords: () => {}
-});
+import { CoursesContext, fetchCourses } from "./EnrollExtra";
 
 // đây là component mẫu có thể xóa nếu ko cần
 export function EnrollLayout() {
@@ -35,26 +25,4 @@ export function EnrollLayout() {
         </div>
     </CoursesContext.Provider>
   );
-}
-
-export async function fetchCourses(): Promise<Record<string, RecordData>> {
-    const newRecords: Record<string, RecordData> = {};
-
-    try {
-        const res = await courseApi.listCourses();
-        const courses: CourseData[] = res.data;
-
-        courses.forEach((course) => {
-            newRecords[course.courseCode] = { courseData: course, isSelect: false };
-        });
-
-        return newRecords;
-    } catch (error) {
-        mockCourses.forEach((course) => {
-            newRecords[course.courseCode] = { courseData: course, isSelect: false };
-        });
-
-        console.error("Lỗi khi lấy danh sách khóa học:", error);
-        return newRecords;
-    }
 }

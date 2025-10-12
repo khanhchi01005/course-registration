@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react"
 import type { RecordAttribute, RecordData } from "../../../datatypes/EnrollDataType"
-import { CoursesContext } from "../EnrollLayout"
+import { CoursesContext } from "../EnrollExtra";
 
 export function EnrollTableRecords({courseData, index, recordKey}: RecordData & {index: number, recordKey: string}) {
 

@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { EnrollTableFields } from "./EnrollTableField";
 import { EnrollTableRecords } from "./EnrollTableRecord";
-import { CoursesContext } from "../EnrollLayout";
+import { CoursesContext } from "../EnrollExtra";
 
 export function EnrollCoursesTable() {
     const { records } = useContext(CoursesContext)
