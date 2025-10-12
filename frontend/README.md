@@ -5,7 +5,7 @@
 - datatypes: chứa các kiểu dữ liệu
 - pages: layout toàn cục chứa các component tương ứng
 - components: các thành phần hiện hữu trong 1 page (button, navbar, ...) 
-- Approuting file: điều hướng endpoint
+- Approuting file: điều hướng trang
 
 
 
