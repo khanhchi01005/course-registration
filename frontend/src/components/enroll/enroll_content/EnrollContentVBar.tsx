@@ -2,10 +2,10 @@ import listLogo from "../../../assets/image/list-logo.svg"
 
 export function EnrollContentVBar(){
     return <nav
-    className="w-[384px] h-full
+    className="min-w-[384px] h-full
     border-r-[1px] border-gray-300
     bg-[rgba(240,240,240,1)]
-    flex flex-col ">
+    hidden lg:flex flex-col ">
         <div 
         className="w-full h-[48px] gap-[5px]
         border-b-[1px] border-gray-300

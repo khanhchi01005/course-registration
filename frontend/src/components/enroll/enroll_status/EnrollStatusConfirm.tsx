@@ -3,9 +3,11 @@ import type { CourseData } from "../../../datatypes/CourseDataType";
 import { useNavigate } from "react-router-dom";
 import { CoursesContext, fetchCourses, saveSubmitData } from "../EnrollExtra";
 import type { SubmitData } from "../../../datatypes/EnrollDataType";
+import { UserContext } from "../../login/LoginExtra";
 
 export function EnrollStatusConfirm() {
     const navigate = useNavigate()
+    const { user } = useContext(UserContext)
     const { records } = useContext(CoursesContext)
 
     const handleRecord = async () => {
@@ -43,7 +45,7 @@ export function EnrollStatusConfirm() {
         
         // Lưu các khóa học thành công vào database
         const submitDatas: SubmitData = {
-            studentCode: "23020592", /////////////////////////////////////////////////////////
+            studentCode: user.studentCode, 
             courseId: sucessedCoursesId
         }
 

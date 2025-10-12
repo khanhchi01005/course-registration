@@ -1,9 +1,13 @@
-import { useState } from "react"
+import { useContext, useEffect } from "react"
 import arrowLogo from "../../../assets/image/arrow-logo.svg"
+import { UserContext } from "../../login/LoginExtra"
 
 export function EnrollNavBarInfo() {
-    const [username] = useState<string>("Nguyễn Văn A")
-    const [usercode] = useState<string>("23020679")
+    const { user } = useContext(UserContext)
+
+    useEffect(() => {
+        console.log(user)
+    })
 
     return <div 
     className="py-[4px] px-[20px] mr-[32px] gap-[10px]
@@ -11,7 +15,7 @@ export function EnrollNavBarInfo() {
     flex items-center">
         <h1 
         className="text-[1rem] text-white yrsa-font">
-            Chào mừng: {username} - {usercode}
+            Chào mừng: {user.fullName} - {user.studentCode}
         </h1>
 
         <img src={arrowLogo} alt="" 
