@@ -18,6 +18,7 @@ export const UserContext = createContext<{
 
 export async function fetchUser(loginData: LoginData): Promise<UserData> {
     try {
+        console.log(loginData)
         const res = await userApi.login(loginData)
         const newUser: UserData = humps.camelizeKeys(res.data) as UserData
 

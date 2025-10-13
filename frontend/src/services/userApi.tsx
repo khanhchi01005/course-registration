@@ -2,5 +2,5 @@ import axiosClient from "./axios";
 
 export const userApi = {
     login: (payload: any) =>
-        axiosClient.post("/credentials/login", payload),
+        axiosClient.post("/api/credentials/Iogin", payload),
 };

@@ -1,13 +1,9 @@
-import { useContext, useEffect } from "react"
+import { useContext } from "react"
 import arrowLogo from "../../../assets/image/arrow-logo.svg"
 import { UserContext } from "../../login/LoginExtra"
 
 export function EnrollNavBarInfo() {
     const { user } = useContext(UserContext)
-
-    useEffect(() => {
-        console.log(user)
-    })
 
     return <div 
     className="py-[4px] px-[20px] mr-[32px] gap-[10px]

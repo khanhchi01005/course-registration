@@ -35,7 +35,6 @@ export function LoginForm() {
       } 
       const userData: UserData = await fetchUser(loginData);
       setUser(userData)
-      console.log(userData)
       alert('Đăng nhập thành công!');
       navigate("/enroll")
     } catch (error) {
