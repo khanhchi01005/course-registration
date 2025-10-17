@@ -6,11 +6,12 @@ enroll_bp = Blueprint('enroll_bp', __name__)
 @enroll_bp.route('/api/subject/enroll', methods=['POST'])
 def enroll_endpoint():
     data = request.get_json()
+    print(data)
     if not data:
         return jsonify({"error": "Dữ liệu JSON không hợp lệ"}), 400
 
     student_code = data.get('student_code')
-    courses = data.get('courses')
+    courses = data.get('course_code')
 
     if not student_code or not isinstance(courses, list):
         return jsonify({"error": "Thiếu student_code hoặc danh sách courses"}), 400

@@ -8,6 +8,7 @@ auth_bp = Blueprint('credentials', __name__)
 @auth_bp.route('/api/credentials/login', methods=['POST'])
 def login():
     data = request.json
+    print(data.get('student_code'))
     student_code = data.get('student_code')
     password_hash = data.get('password')
 

@@ -1,1 +1,15 @@
 /venv
+
+# Bỏ qua các file Python biên dịch và cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# (tuỳ chọn) Bỏ qua virtual environment
+venv/
+.env/
+
+# (tuỳ chọn) Bỏ qua các file IDE
+.vscode/
+.idea/

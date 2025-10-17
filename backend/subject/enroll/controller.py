@@ -16,22 +16,23 @@ def enroll_in_courses(student_code: str, courses_to_enroll: list):
         if connection is None:
             raise EnrollmentError("Không thể kết nối đến database.")
 
-        # Dùng DictCursor nếu là pymysql
         cursor = connection.cursor(pymysql.cursors.DictCursor)
-
-        # Một số driver (như PyMySQL) không có start_transaction(), nên thay bằng begin()
-        try:
-            connection.begin()
-        except AttributeError:
-            pass
+        connection.begin()
 
         for course_data in courses_to_enroll:
-            course_code = course_data.get('course_code')
+            # Nếu phần tử là string
+            if isinstance(course_data, str):
+                course_code = course_data
+            # Nếu phần tử là dict
+            elif isinstance(course_data, dict):
+                course_code = course_data.get('course_code')
+            else:
+                continue
+
             if not course_code:
                 continue
 
             try:
-                # 1. Lấy thông tin mới nhất từ DB và KHÓA dòng dữ liệu lại để chống race condition
                 query_course_lock = """
                     SELECT course_code, current_slots, max_slots 
                     FROM courses 
@@ -45,51 +46,33 @@ def enroll_in_courses(student_code: str, courses_to_enroll: list):
                     results["failed"][course_code] = "Môn học không tồn tại"
                     continue
 
-                course_code_from_db = course_db_info['course_code']
-
-                # 2. Kiểm tra sĩ số dựa trên dữ liệu vừa lấy từ DB
                 if course_db_info['current_slots'] < course_db_info['max_slots']:
-                    # Vẫn còn chỗ
-                    # 3a. Ghi nhận đăng ký vào bảng `registrations`
-                    insert_registration = """
-                        INSERT INTO registrations (student_code, course_code) 
-                        VALUES (%s, %s)
-                    """
-                    cursor.execute(insert_registration, (student_code, course_code_from_db))
-                    
-                    # 3b. Cập nhật lại sĩ số hiện tại trong bảng `courses`
-                    update_slots = """
-                        UPDATE courses 
-                        SET current_slots = current_slots + 1 
-                        WHERE course_code = %s
-                    """
-                    cursor.execute(update_slots, (course_code_from_db,))
-                    
+                    cursor.execute(
+                        "INSERT INTO registrations (student_code, course_code) VALUES (%s, %s)",
+                        (student_code, course_code),
+                    )
+                    cursor.execute(
+                        "UPDATE courses SET current_slots = current_slots + 1 WHERE course_code = %s",
+                        (course_code,),
+                    )
                     results["successful"].append(course_code)
                 else:
                     results["failed"][course_code] = "Lớp học đã đầy"
 
-            except mysql.connector.Error as err:
+            except pymysql.MySQLError as err:
                 results["failed"][course_code] = f"Lỗi database khi xử lý môn học: {err}"
 
-        # 4. COMMIT TRANSACTION
         connection.commit()
 
-    except mysql.connector.Error as err:
+    except pymysql.MySQLError as err:
         if connection:
             connection.rollback()
         raise EnrollmentError(f"Lỗi transaction nghiêm trọng: {err}")
-    
+
     finally:
-        try:
-            if 'cursor' in locals() and cursor is not None:
-                cursor.close()
-        except Exception:
-            pass
-        try:
-            if connection is not None:
-                connection.close()
-        except Exception:
-            pass
+        if 'cursor' in locals() and cursor:
+            cursor.close()
+        if connection:
+            connection.close()
 
     return results

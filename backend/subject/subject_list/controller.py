@@ -22,7 +22,7 @@ def get_list(student_code: str) -> Optional[List[Dict[str, Any]]]:
         cur.execute("""
             SELECT  course_code, course_name, current_slots, max_slots
             FROM courses
-            ORDER BY course_code
+            ORDER BY course_name
         """)
         rows = cur.fetchall()
       
@@ -41,4 +41,39 @@ def get_list(student_code: str) -> Optional[List[Dict[str, Any]]]:
                 conn.close()
             except Exception:
                 pass
-# ...existing code...
+
+def get_all_list() -> Optional[List[Dict[str, Any]]]:
+    """
+    Lấy toàn bộ danh sách khóa học (không phụ thuộc student_code)
+    """
+    conn = None
+    cur = None
+    try:
+        conn = get_db_connection()
+        if conn is None:
+            return None
+
+        cur = conn.cursor(pymysql.cursors.DictCursor)
+
+        cur.execute("""
+            SELECT course_code, course_name, current_slots, max_slots
+            FROM courses
+            ORDER BY course_name
+        """)
+        rows = cur.fetchall()
+
+        return list(rows) if rows else []
+
+    except pymysql.MySQLError:
+        return None
+    finally:
+        if cur:
+            try:
+                cur.close()
+            except Exception:
+                pass
+        if conn:
+            try:
+                conn.close()
+            except Exception:
+                pass
