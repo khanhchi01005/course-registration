@@ -1,13 +1,16 @@
 ## Cài đặt thư viện
 
-Clone dự án và cài các dependencies:
+Clone dự án:
 
 ```bash
-# Clone repository
 git clone https://github.com/<your-repo>/course-registration.git
+```
+
+# Cài các dependencies của frontend:
+
+```bash
 cd course-registration/frontend
 
-# Cài các thư viện npm
 npm install \
 @eslint/js@9.37.0 \
 @tailwindcss/vite@4.1.14 \
@@ -35,3 +38,8 @@ tailwindcss@4.1.14 \
 typescript-eslint@8.46.0 \
 typescript@5.9.3 \
 vite@7.1.9
+```
+
+# Chạy frontend
+npm run dev
+
