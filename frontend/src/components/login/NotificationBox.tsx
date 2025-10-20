@@ -1,6 +1,4 @@
 // src/components/login/NotificationBox.tsx
-import React from 'react';
-
 export function NotificationBox() {
   return (
     <div>
@@ -11,7 +9,7 @@ export function NotificationBox() {
           </h2>
         </div>
       </div>
-      
+
       <h3 className="text-xl font-bold text-gray-800 mb-2 yrsa-font">THÔNG BÁO</h3>
       <ul className="space-y-1 text-base">
         <li className="flex items-start pl-8">

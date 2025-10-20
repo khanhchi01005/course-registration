@@ -2,7 +2,6 @@ import humps from "humps";
 import type { RecordData, SubmitData } from "../../datatypes/EnrollDataType";
 import type { CourseData } from "../../datatypes/CourseDataType";
 import { courseApi } from "../../services/courseApi";
-import { mockCourses } from "../../services/mockCourseData";
 import { createContext } from "react";
 
 export const CoursesContext = createContext<{
@@ -10,7 +9,7 @@ export const CoursesContext = createContext<{
     setRecords: React.Dispatch<React.SetStateAction<Record<string, RecordData>>>
 }>({
     records: {},
-    setRecords: () => {}
+    setRecords: () => { }
 });
 
 export async function fetchCourses(): Promise<Record<string, RecordData>> {
@@ -37,10 +36,10 @@ export async function fetchCourses(): Promise<Record<string, RecordData>> {
 }
 
 export async function saveSubmitData(submitData: SubmitData) {
-    try{
+    try {
         const res = await courseApi.submit(humps.decamelizeKeys(submitData))
         console.log(res.data)
-    } catch(error) {
+    } catch (error) {
         console.log("Lỗi khi submit danh sách học sinh: ", error)
     }
 }

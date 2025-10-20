@@ -1,10 +1,6 @@
 // src/components/login/Header.tsx
-import { useContext } from "react";
-import { UserContext } from "./login/LoginExtra";
 
 export function Header() {
-  const { user } = useContext(UserContext);
-
   return (
     <header className="bg-white shadow-lg py-1 z-10">
       <div className="w-full px-4 flex items-center justify-between">

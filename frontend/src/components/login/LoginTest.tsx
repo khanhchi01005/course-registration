@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Search, Music2, Bell, Edit2 } from 'lucide-react';
 
 const MusicProfileSettings = () => {
@@ -71,9 +71,9 @@ const MusicProfileSettings = () => {
         <div className="flex items-start gap-6 mb-8">
           <div className="relative">
             <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-700">
-              <img 
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop" 
-                alt="Profile" 
+              <img
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&h=200&fit=crop"
+                alt="Profile"
                 className="w-full h-full object-cover"
               />
             </div>
@@ -99,11 +99,10 @@ const MusicProfileSettings = () => {
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-6 py-3 font-medium transition-all relative ${
-                activeTab === tab
+              className={`px-6 py-3 font-medium transition-all relative ${activeTab === tab
                   ? 'text-white'
                   : 'text-gray-400 hover:text-gray-300'
-              }`}
+                }`}
             >
               {tab}
               {activeTab === tab && (
