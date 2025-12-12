@@ -2,11 +2,11 @@ import axios from "axios";
 
 // Tạo một instance Axios dùng chung
 const axiosClient = axios.create({
-    baseURL: "http://127.0.0.1:5000",
-    headers: {
-        "Content-Type": "application/json",
-    },
-    withCredentials: false, 
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: false,
 });
 
 axiosClient.interceptors.response.use(

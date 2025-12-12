@@ -4,8 +4,6 @@ import { LoginPage } from "./pages/LoginPage";
 import { UserProvider } from "./components/login/LoginExtra";
 import { ProtectedRoute } from "./components/login/ProtectRoutes";
 
-// muốn chuyển hường mà chưa có điều kiện active thì viết trực tiếp endpoint:
-// http://localhost:3000/login | http://localhost:3000/enroll
 export function AppRouting() {
 
   return (

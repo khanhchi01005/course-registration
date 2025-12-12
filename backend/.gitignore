@@ -1,1 +1,48 @@
-.env
+# --- Python cache ---
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- Virtual environment ---
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+
+# --- Environment variables ---
+*.env
+.env.*
+!example.env
+
+# --- IDE / Editor ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- Logs ---
+*.log
+logs/
+log/
+
+# --- Byte-compiled / optimized / DLL files ---
+*.so
+*.dll
+*.dylib
+
+# --- Distribution / Packaging ---
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# --- Unit test / Coverage ---
+htmlcov/
+.coverage
+coverage.xml
+.pytest_cache/
+
+# --- Misc ---
+.DS_Store
+Thumbs.db

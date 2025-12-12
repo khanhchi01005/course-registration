@@ -1,6 +1,5 @@
 from flask import Blueprint, request, jsonify
 from .controller import login_user
-from passlib.hash import bcrypt
 
 auth_bp = Blueprint('credentials', __name__)
 
