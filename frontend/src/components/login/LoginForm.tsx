@@ -9,7 +9,6 @@ import type { LoginData } from '../../datatypes/LoginDataTypes';
 export function LoginForm() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
   const { setUser } = useContext(UserContext);
@@ -19,11 +18,6 @@ export function LoginForm() {
 
     if (!username || !password) {
       alert('Vui lòng nhập tên truy cập và mật khẩu');
-      return;
-    }
-
-    if (!captchaToken) {
-      alert('Vui lòng xác minh rằng bạn không phải robot');
       return;
     }
 
@@ -109,7 +103,6 @@ export function LoginForm() {
             <div className="flex justify-start">
               <ReCAPTCHA
                 sitekey={import.meta.env.VITE_RECAPTCHA_SITE_KEY}
-                onChange={(token: string | null) => setCaptchaToken(token)}
               />
             </div>
           </div>
