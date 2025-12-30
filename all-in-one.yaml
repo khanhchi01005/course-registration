@@ -1,0 +1,245 @@
+# Namespace
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dangkyhoc
+---
+# Deployment FE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dangkyhoc-frontend-deployment
+  namespace: dangkyhoc
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: dangkyhoc-frontend
+  template:
+    metadata:
+      labels:
+        app: dangkyhoc-frontend
+    spec:
+      containers:
+        - name: dangkyhoc-frontend
+          image: npnlong/dangkyhoc-fe:v5
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "150m"
+              memory: "128Mi"
+---
+# Service FE
+apiVersion: v1
+kind: Service
+metadata:
+  name: dangkyhoc-frontend-service
+  namespace: dangkyhoc
+spec:
+  type: ClusterIP
+  selector:
+    app: dangkyhoc-frontend
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+---
+# Secret cho Backend
+apiVersion: v1
+kind: Secret
+metadata:
+  name: dangkyhoc-backend-secret
+  namespace: dangkyhoc
+type: Opaque
+stringData:
+  DB_HOST: "192.168.40.144"
+  DB_USER: "root"
+  DB_PASSWORD: "123456"
+  DB_NAME: "qtm"
+  DB_PORT: "3306"
+  CORS_ORIGIN: "http://testdangkyhoc.vnu.edu.vn"
+---
+# ConfigMap BE trỏ tới Secret
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dangkyhoc-backend-config
+  namespace: dangkyhoc
+data:
+  DB_HOST: "DB_HOST"
+  DB_USER: "DB_USER"
+  DB_PASSWORD: "DB_PASSWORD"
+  DB_NAME: "DB_NAME"
+  DB_PORT: "DB_PORT"
+  CORS_ORIGIN: "CORS_ORIGIN"
+---
+# Deployment BE
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dangkyhoc-backend-deployment
+  namespace: dangkyhoc
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: dangkyhoc-backend
+  template:
+    metadata:
+      labels:
+        app: dangkyhoc-backend
+    spec:
+      containers:
+        - name: dangkyhoc-backend
+          image: npnlong/dangkyhoc-be:v6
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+          command: ["gunicorn"]
+          args:
+            - "app:app"
+            - "--bind=0.0.0.0:5000"
+            - "--workers=2"
+            - "--threads=4"
+            - "--timeout=60"
+            - "--access-logfile=-"
+            - "--error-logfile=-"
+            - "--log-level=info"
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "400m"
+              memory: "768Mi"
+          env:
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: dangkyhoc-backend-secret
+                  key: DB_HOST
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: dangkyhoc-backend-secret
+                  key: DB_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: dangkyhoc-backend-secret
+                  key: DB_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: dangkyhoc-backend-secret
+                  key: DB_NAME
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: dangkyhoc-backend-secret
+                  key: DB_PORT
+            - name: CORS_ORIGIN
+              valueFrom:
+                secretKeyRef:
+                  name: dangkyhoc-backend-secret
+                  key: CORS_ORIGIN
+---
+# Service BE
+apiVersion: v1
+kind: Service
+metadata:
+  name: dangkyhoc-backend-service
+  namespace: dangkyhoc
+spec:
+  type: ClusterIP
+  selector:
+    app: dangkyhoc-backend
+  ports:
+    - port: 5000
+      targetPort: 5000
+      protocol: TCP
+---
+# Ingress FE
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dangkyhoc-frontend-ingress
+  namespace: dangkyhoc
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: testdangkyhoc.vnu.edu.vn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dangkyhoc-frontend-service
+                port:
+                  number: 80
+---
+# Ingress BE
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dangkyhoc-backend-ingress
+  namespace: dangkyhoc
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api-testdangkyhoc.vnu.edu.vn
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: dangkyhoc-backend-service
+                port:
+                  number: 5000
+---
+# HPA BE
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: dangkyhoc-backend-hpa
+  namespace: dangkyhoc
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: dangkyhoc-backend-deployment
+  minReplicas: 3
+  maxReplicas: 8
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 65
+    - type: Resource
+      resource:
+        name: memory
+        target:
+          type: Utilization
+          averageUtilization: 75
+  behavior:
+    scaleUp:
+      stabilizationWindowSeconds: 30
+      policies:
+        - type: Percent
+          value: 50
+          periodSeconds: 30
+    scaleDown:
+      stabilizationWindowSeconds: 60
+      policies:
+        - type: Percent
+          value: 30
+          periodSeconds: 30
