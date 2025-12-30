@@ -13,7 +13,9 @@ db_pool = PooledDB(
     database=os.getenv("DB_NAME"),
     port=int(os.getenv("DB_PORT")),
     charset="utf8mb4",
-    maxconnections=10
+    maxconnections=10,
+    mincached=3,
+    maxcached=6
 )
 
 def get_db_connection():
